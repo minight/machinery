@@ -9,10 +9,10 @@ MAINTAINER Richard Knop <risoknop@gmail.com>
 ENV PATH /go/bin:$PATH
 
 # Cd into the source code directory
-WORKDIR /go/src/github.com/RichardKnop/machinery
+WORKDIR /go/src/github.com/minight/machinery
 
 # Copy the local package files to the container's workspace.
-ADD . /go/src/github.com/RichardKnop/machinery
+ADD . /go/src/github.com/minight/machinery
 
 # Set GO111MODULE=on variable to activate module support
 ENV GO111MODULE on

@@ -8,21 +8,21 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/RichardKnop/machinery/v1/config"
+	"github.com/minight/machinery/v1/config"
 
-	amqpbroker "github.com/RichardKnop/machinery/v1/brokers/amqp"
-	eagerbroker "github.com/RichardKnop/machinery/v1/brokers/eager"
-	brokeriface "github.com/RichardKnop/machinery/v1/brokers/iface"
-	redisbroker "github.com/RichardKnop/machinery/v1/brokers/redis"
-	sqsbroker "github.com/RichardKnop/machinery/v1/brokers/sqs"
+	amqpbroker "github.com/minight/machinery/v1/brokers/amqp"
+	eagerbroker "github.com/minight/machinery/v1/brokers/eager"
+	brokeriface "github.com/minight/machinery/v1/brokers/iface"
+	redisbroker "github.com/minight/machinery/v1/brokers/redis"
+	sqsbroker "github.com/minight/machinery/v1/brokers/sqs"
 
-	amqpbackend "github.com/RichardKnop/machinery/v1/backends/amqp"
-	dynamobackend "github.com/RichardKnop/machinery/v1/backends/dynamodb"
-	eagerbackend "github.com/RichardKnop/machinery/v1/backends/eager"
-	backendiface "github.com/RichardKnop/machinery/v1/backends/iface"
-	memcachebackend "github.com/RichardKnop/machinery/v1/backends/memcache"
-	mongobackend "github.com/RichardKnop/machinery/v1/backends/mongo"
-	redisbackend "github.com/RichardKnop/machinery/v1/backends/redis"
+	amqpbackend "github.com/minight/machinery/v1/backends/amqp"
+	dynamobackend "github.com/minight/machinery/v1/backends/dynamodb"
+	eagerbackend "github.com/minight/machinery/v1/backends/eager"
+	backendiface "github.com/minight/machinery/v1/backends/iface"
+	memcachebackend "github.com/minight/machinery/v1/backends/memcache"
+	mongobackend "github.com/minight/machinery/v1/backends/mongo"
+	redisbackend "github.com/minight/machinery/v1/backends/redis"
 )
 
 // BrokerFactory creates a new object of iface.Broker

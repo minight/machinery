@@ -1,4 +1,4 @@
-module github.com/RichardKnop/machinery
+module github.com/minight/machinery
 
 require (
 	github.com/RichardKnop/logging v0.0.0-20180729160517-75cec7213f7c
