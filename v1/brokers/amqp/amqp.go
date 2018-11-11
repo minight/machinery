@@ -59,9 +59,9 @@ func (b *Broker) StartConsuming(consumerTag string, concurrency int, taskProcess
 		queueName,                       // queue name
 		true,                            // queue durable
 		false,                           // queue delete when unused
-		b.GetConfig().AMQP.BindingKey, // queue binding key
-		nil, // exchange declare args
-		nil, // queue declare args
+		b.GetConfig().AMQP.BindingKey,   // queue binding key
+		nil,                             // exchange declare args
+		nil,                             // queue declare args
 		amqp.Table(b.GetConfig().AMQP.QueueBindingArgs), // queue binding args
 	)
 	if err != nil {
@@ -147,10 +147,20 @@ func (b *Broker) GetOrOpenConnection(queueName string, queueBindingKey string, e
 			select {
 			case err = <-conn.errorchan:
 				log.INFO.Printf("Error occured on queue: %s. Reconnecting", queueName)
-				_, err := b.GetOrOpenConnection(queueName, queueBindingKey, exchangeDeclareArgs, queueDeclareArgs, queueBindingArgs)
+
+				b.connectionsMutex.Lock()
+				delete(b.connections, queueName)
+				b.connectionsMutex.Unlock()
+
+				newConn, err := b.GetOrOpenConnection(queueName, queueBindingKey, exchangeDeclareArgs, queueDeclareArgs, queueBindingArgs)
 				if err != nil {
-					log.ERROR.Printf("Failed to reopen queue: %s.", queueName)
+					log.ERROR.Panicf("Failed to reopen queue: %s.", queueName)
 				}
+
+				b.connectionsMutex.Lock()
+				b.connections[queueName] = newConn
+				b.connectionsMutex.Unlock()
+
 			case <-conn.cleanup:
 				return
 			}
@@ -200,8 +210,8 @@ func (b *Broker) Publish(signature *tasks.Signature) error {
 
 	connection, err := b.GetOrOpenConnection(signature.RoutingKey,
 		b.GetConfig().AMQP.BindingKey, // queue binding key
-		nil, // exchange declare args
-		nil, // queue declare args
+		nil,                           // exchange declare args
+		nil,                           // queue declare args
 		amqp.Table(b.GetConfig().AMQP.QueueBindingArgs), // queue binding args
 	)
 	if err != nil {
@@ -352,9 +362,9 @@ func (b *Broker) delay(signature *tasks.Signature, delayMs int64) error {
 		"x-expires": delayMs * 2,
 	}
 	connection, err := b.GetOrOpenConnection(queueName,
-		queueName,                                       // queue binding key
-		nil,                                             // exchange declare args
-		declareQueueArgs,                                // queue declare arghs
+		queueName,        // queue binding key
+		nil,              // exchange declare args
+		declareQueueArgs, // queue declare arghs
 		amqp.Table(b.GetConfig().AMQP.QueueBindingArgs), // queue binding args
 	)
 	if err != nil {
