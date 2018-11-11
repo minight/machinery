@@ -46,17 +46,12 @@ func New(cnf *config.Config) iface.Broker {
 func (b *Broker) StartConsuming(consumerTag string, concurrency int, taskProcessor iface.TaskProcessor) (bool, error) {
 	b.Broker.StartConsuming(consumerTag, concurrency, taskProcessor)
 
-	queueName := taskProcessor.CustomQueue()
-	if queueName == "" {
-		queueName = b.GetConfig().DefaultQueue
-	}
-
 	conn, channel, queue, _, amqpCloseChan, err := b.Connect(
 		b.GetConfig().Broker,
 		b.GetConfig().TLSConfig,
 		b.GetConfig().AMQP.Exchange,     // exchange name
 		b.GetConfig().AMQP.ExchangeType, // exchange type
-		queueName,                       // queue name
+		b.GetConfig().DefaultQueue,      // queue name
 		true,                            // queue durable
 		false,                           // queue delete when unused
 		b.GetConfig().AMQP.BindingKey,   // queue binding key
