@@ -1,4 +1,4 @@
-module github.com/RichardKnop/machinery
+module github.com/minight/machinery
 
 require (
 	cloud.google.com/go v0.31.0
